@@ -4,12 +4,12 @@
 
   tasks:
 
-  - name: Setting default values 
-    ansible.builtin.set_fact:
-      requests_cpu: "{{ requests_cpu | default('1') }}"
-      limits_cpu: "{{ limits_cpu | default('2') }}"
-      requests_memory: "{{ requests_memory | default('2Gi') }}"
-      limits_memory: "{{ limits_memory | default('5Gi') }}"
+    - name: Setting default values 
+      ansible.builtin.set_fact:
+        requests_cpu: "{{ requests_cpu | default('1') }}"
+        limits_cpu: "{{ limits_cpu | default('2') }}"
+        requests_memory: "{{ requests_memory | default('2Gi') }}"
+        limits_memory: "{{ limits_memory | default('5Gi') }}"
   
     # Ensure we have the basic details 
     - fail: msg="Cancelling Job, Namespace not correctly specified"
