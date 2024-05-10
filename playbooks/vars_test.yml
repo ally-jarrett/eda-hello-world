@@ -10,7 +10,10 @@
         limits_cpu: "{{ limits_cpu | default('2') }}"
         requests_memory: "{{ requests_memory | default('2Gi') }}"
         limits_memory: "{{ limits_memory | default('5Gi') }}"
-  
+
+    - name: Fail on no Namespace definition provided
+      debug:
+
     # Ensure we have the basic details 
     - name: Fail on no Namespace definition provided
       ansible.builtin.fail: 
