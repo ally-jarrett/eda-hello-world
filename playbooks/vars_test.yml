@@ -2,7 +2,6 @@
   hosts: localhost
   gather_facts: no
   vars:
-    namespace: "{{ namespace | default('') }}"
     requests_cpu: "{{ requests_cpu | default('1') }}"
     limits_cpu: "{{ limits_cpu | default('2') }}"
     requests_memory: "{{ requests_memory | default('2Gi') }}"
