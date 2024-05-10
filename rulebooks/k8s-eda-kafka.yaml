@@ -1,0 +1,24 @@
+---
+- name: K8s Kafka Event
+  hosts: localhost
+  sources:
+    - ansible.eda.kafka:
+        host: automation-streams-kafka-bootstrap.skylight.svc.cluster.local
+        port: 9092
+        topic: kafka-test-topic
+        group_id: ansible-eda
+
+  rules:
+    - name: kafka
+      condition: event.body.request.type is defined and event.body.request.type == "CREATE_NAMESPACE"
+      action:
+        run_job_template:
+          name: K8s Namespace Template
+          organization: Default
+
+    - name: kafka
+      condition: event.body.request.type is defined and event.body.request.type == "UPDATE_NAMESPACE_QUOTA"
+      action:
+        run_job_template:
+          name: K8s Quota Template
+          organization: Default
