@@ -12,15 +12,15 @@
         requests_memory: "{{ requests_memory | default('2Gi') }}"
         limits_memory: "{{ limits_memory | default('5Gi') }}"
 
-    - name: Fail on no Namespace definition provided
-      debug:
-        var: ansible_facts
+    # - name: Fail on no Namespace definition provided
+    #   debug:
+    #     var: ansible_facts
 
-    # Ensure we have the basic details 
-    - name: Fail on no Namespace definition provided
-      ansible.builtin.fail: 
-        msg: "Cancelling Job, Namespace not correctly specified"
-      when: ansible_facts["namespace"] is undefined or ansible_facts["namespace"] != ""
+    # # Ensure we have the basic details 
+    # - name: Fail on no Namespace definition provided
+    #   ansible.builtin.fail: 
+    #     msg: "Cancelling Job, Namespace not correctly specified"
+    #   when: ansible_facts["namespace"] is undefined or ansible_facts["namespace"] != ""
 
     # - fail: msg="Cancelling Job, Namespace does not exist on cluster"
     #   when: namespace is undefined
