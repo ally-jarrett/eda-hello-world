@@ -14,7 +14,7 @@
 
     - name: Fail on no Namespace definition provided
       debug:
-        var: vars
+        var: ansible_facts
 
     # Ensure we have the basic details 
     - name: Fail on no Namespace definition provided
