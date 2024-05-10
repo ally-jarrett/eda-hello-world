@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: utilitypod
+  namespace: testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: utilitypod
+  template:
+    metadata:
+      labels:
+        app: utilitypod
+    spec:
+      containers:
+        - name: busybox
+          image: busybox
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          command:
+            - sleep
+            - "3600"
