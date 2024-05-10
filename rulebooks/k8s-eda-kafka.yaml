@@ -9,14 +9,14 @@
         group_id: ansible-eda
 
   rules:
-    - name: kafka
+    - name: Create new Namespace
       condition: event.body.request.type is defined and event.body.request.type == "CREATE_NAMESPACE"
       action:
         run_job_template:
           name: K8s Namespace Template
           organization: Default
 
-    - name: kafka
+    - name: Update existing Quota 
       condition: event.body.request.type is defined and event.body.request.type == "UPDATE_NAMESPACE_QUOTA"
       action:
         run_job_template:
