@@ -2,19 +2,26 @@
   hosts: localhost
   gather_facts: no
   vars:
-    ns: 'testing'
-    requests_cpu: '2'
-    limits_cpu: '3'
-    requests_memory: '5Gi'
-    limits_memory: '10Gi'
+    namespace: "{{ ansible_eda.event.body.namespace.name }}"
+    requests_cpu: "{{ ansible_eda.event.body.namespace.requests_cpu | default('1') }}"
+    limits_cpu: "{{ ansible_eda.event.body.namespace.limits_cpu | default('2') }}"
+    requests_memory: "{{ ansible_eda.event.body.namespace.requests_memory | default('2Gi') }}"
+    limits_memory: "{{ ansible_eda.event.body.namespace.limits_memory | default('5Gi') }}"
 
 
   tasks:
+  
+    - fail: msg="Cancelling Job, Namespace not correctly specified"
+      when: namespace is undefined
+
+    # - fail: msg="Cancelling Job, Namespace does not exist on cluster"
+    #   when: namespace is undefined
+
     - name: Set resource quotas
       kubernetes.core.k8s:
         api_version: v1
         kind: ResourceQuota
-        namespace: "{{ ns}}"
+        namespace: "{{ namespace }}"
         name: resource-quota
         state: present
         definition:
