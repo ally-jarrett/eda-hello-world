@@ -20,7 +20,7 @@
     - name: Fail on no Namespace definition provided
       ansible.builtin.fail: 
         msg: "Cancelling Job, Namespace not correctly specified"
-      when: namespace is undefined or namespace != ""
+      when: ansible_facts["namespace"] is undefined or ansible_facts["namespace"] != ""
 
     # - fail: msg="Cancelling Job, Namespace does not exist on cluster"
     #   when: namespace is undefined
