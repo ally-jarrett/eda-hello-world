@@ -1,0 +1,7 @@
+- name: Setting booleans using complex argument style
+  ansible.builtin.set_fact:
+    namespace: "{{ ansible_eda.event.body.namespace.name }}"
+    requests_cpu: "{{ ansible_eda.event.body.namespace.requests_cpu }}"
+    limits_cpu: "{{ ansible_eda.event.body.namespace.limits_cpu }}"
+    requests_memory: "{{ ansible_eda.event.body.namespace.requests_memory }}"
+    limits_memory: "{{ ansible_eda.event.body.namespace.limits_memory }}"

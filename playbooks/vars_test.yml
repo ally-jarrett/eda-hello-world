@@ -2,11 +2,11 @@
   hosts: localhost
   gather_facts: no
   vars:
-    namespace: "{{ ansible_eda.event.body.namespace.name if ansible_eda is defined else 'testing' }}"
-    requests_cpu: "{{ ansible_eda.event.body.namespace.requests_cpu if ansible_eda is defined else '1' }}"
-    limits_cpu: "{{ ansible_eda.event.body.namespace.limits_cpu if ansible_eda is defined else '2' }}"
-    requests_memory: "{{ ansible_eda.event.body.namespace.requests_memory if ansible_eda is defined else '2Gi' }}"
-    limits_memory: "{{ ansible_eda.event.body.namespace.limits_memory if ansible_eda is defined else 5Gi' }}"
+    namespace: 'testing'
+    requests_cpu: '1'
+    limits_cpu: '2'
+    requests_memory: '2Gi'
+    limits_memory: '5Gi'
 
   tasks:
   
@@ -15,6 +15,10 @@
 
     # - fail: msg="Cancelling Job, Namespace does not exist on cluster"
     #   when: namespace is undefined
+
+    - name: Include EDA Vars when defined
+      ansible.builtin.include_tasks: 'var_list.yaml'
+      when: ansible_eda is defined
 
     - name: Set resource quotas
       kubernetes.core.k8s:
