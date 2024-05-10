@@ -3,9 +3,9 @@
   gather_facts: no
   vars:
     requests_cpu: "{{ requests_cpu | default('1') }}"
-    limits_cpu: "{{ limits_cpu | default('2') }}"
-    requests_memory: "{{ requests_memory | default('2Gi') }}"
-    limits_memory: "{{ limits_memory | default('5Gi') }}"
+    limits_cpu: "{{ limits_cpu if limits_cpu is defined else '2' }}"
+    requests_memory: "{{ requests_memory if requests_memory is defined else '2Gi' }}"
+    limits_memory: "{{ limits_memory if limits_memory is defined else '5Gi' }}"
 
   tasks:
   
