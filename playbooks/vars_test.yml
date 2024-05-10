@@ -6,6 +6,7 @@
 
     - name: Setting default values 
       ansible.builtin.set_fact:
+        namespace: " {{ namespace | deafult('testing') }} "
         requests_cpu: "{{ requests_cpu | default('1') }}"
         limits_cpu: "{{ limits_cpu | default('2') }}"
         requests_memory: "{{ requests_memory | default('2Gi') }}"
