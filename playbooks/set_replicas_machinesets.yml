@@ -8,7 +8,7 @@
   tasks:
     - name: Create a Deployment with 1 replica
       kubernetes.core.k8s:
-        state: present
+        state: patched
         definition:
           apiVersion: machine.openshift.io/v1beta1
           kind: MachineSet
