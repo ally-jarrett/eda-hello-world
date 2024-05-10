@@ -1,0 +1,32 @@
+- name: Set resource quotas for a Kubernetes cluster for a namespace
+  hosts: localhost
+  gather_facts: no
+  vars:
+    namespace: "{{ ansible_eda.event.body.namespace.name if ansible_eda is defined else 'testing' }}"
+    requests_cpu: "{{ ansible_eda.event.body.namespace.requests_cpu if ansible_eda is defined else '1' }}"
+    limits_cpu: "{{ ansible_eda.event.body.namespace.limits_cpu if ansible_eda is defined else '2' }}"
+    requests_memory: "{{ ansible_eda.event.body.namespace.requests_memory if ansible_eda is defined else '2Gi' }}"
+    limits_memory: "{{ ansible_eda.event.body.namespace.limits_memory if ansible_eda is defined else 5Gi' }}"
+
+  tasks:
+  
+    - fail: msg="Cancelling Job, Namespace not correctly specified"
+      when: namespace is undefined and namespace != ""
+
+    # - fail: msg="Cancelling Job, Namespace does not exist on cluster"
+    #   when: namespace is undefined
+
+    - name: Set resource quotas
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: ResourceQuota
+        namespace: "{{ namespace }}"
+        name: resource-quota
+        state: present
+        definition:
+          spec:
+            hard:
+              "limits.cpu": "{{ limits_cpu }}"
+              "limits.memory": "{{ limits_memory }}"
+              "requests.cpu": "{{ requests_cpu }}"
+              "requests.memory": "{{ requests_memory }}"
