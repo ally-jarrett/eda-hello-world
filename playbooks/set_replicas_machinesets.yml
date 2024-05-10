@@ -3,7 +3,7 @@
   gather_facts: no
   vars:
     ms_name: 'cedar-s46rt-worker-0'
-    ms_replicas: '1'
+    ms_replicas: 1
 
   tasks:
     - name: Create a Deployment with 1 replica
@@ -16,4 +16,4 @@
             name: "{{ ms_name }}"
             namespace: 'openshift-machine-api'
           spec:
-            replicas: "{{ ms_replicas | int }}"
+            replicas: '{{ ms_replicas }}'
