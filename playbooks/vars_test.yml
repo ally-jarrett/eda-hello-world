@@ -2,24 +2,27 @@
   hosts: localhost
   gather_facts: no
   vars:
-    namespace: 'testing'
-    requests_cpu: '1'
-    limits_cpu: '2'
-    requests_memory: '2Gi'
-    limits_memory: '5Gi'
+    namespace: "{{ namespace | default('') }}"
+    requests_cpu: "{{ requests_cpu | default('1') }}"
+    limits_cpu: "{{ limits_cpu | default('2') }}"
+    requests_memory: "{{ requests_memory | default('2Gi') }}"
+    limits_memory: "{{ limits_memory | default('5Gi') }}"
 
   tasks:
   
+    # Ensure we have the basic details 
     - fail: msg="Cancelling Job, Namespace not correctly specified"
       when: namespace is undefined and namespace != ""
 
     # - fail: msg="Cancelling Job, Namespace does not exist on cluster"
     #   when: namespace is undefined
 
+    # Override EDA Vars if Playbook has been initiated via EDA 
     - name: Include EDA Vars when defined
       ansible.builtin.include_tasks: 'var_list.yaml'
       when: ansible_eda is defined
 
+    # Do the work...
     - name: Set resource quotas
       kubernetes.core.k8s:
         api_version: v1
