@@ -12,8 +12,10 @@
         limits_memory: "{{ limits_memory | default('5Gi') }}"
   
     # Ensure we have the basic details 
-    - fail: msg="Cancelling Job, Namespace not correctly specified"
-      when: namespace is undefined and namespace != ""
+    - name: Fail on no Namespace definition provided
+      ansible.builtin.fail: 
+        msg: "Cancelling Job, Namespace not correctly specified"
+      when: namespace is undefined or namespace != ""
 
     # - fail: msg="Cancelling Job, Namespace does not exist on cluster"
     #   when: namespace is undefined
