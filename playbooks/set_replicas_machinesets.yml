@@ -6,7 +6,7 @@
     ms_replicas: '1'
 
   tasks:
-    - name: Set resource quotas
+    - name: Set MachineSet Replicas
       kubernetes.core.k8s:
         apiVersion: machine.openshift.io/v1beta1
         kind: MachineSet
