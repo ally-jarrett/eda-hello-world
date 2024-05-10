@@ -6,12 +6,14 @@
     ms_replicas: '1'
 
   tasks:
-    - name: Set MachineSet Replicas
+    - name: Create a Deployment with 1 replica
       kubernetes.core.k8s:
-        apiVersion: machine.openshift.io/v1beta1
-        kind: MachineSet
-        metadata:
-          name: "{{ ms_name }}"
-          namespace: openshift-machine-api
-        spec:
-          replicas: "{{ ms_replicas }}"
+        state: present
+        definition:
+          apiVersion: machine.openshift.io/v1beta1
+          kind: MachineSet
+          metadata:
+            name: "{{ ms_name }}"
+            namespace: 'openshift-machine-api'
+          spec:
+            replicas: "{{ ms_replicas }}"
