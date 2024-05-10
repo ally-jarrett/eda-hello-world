@@ -13,7 +13,7 @@
         definition:
           spec:
             hard:
-              "limits.cpu": "{{ ansible_eda.event.body.limits_cpu }}"
-              "limits.memory": "{{ ansible_eda.event.body.limits_memory }}"
-              "requests.cpu": "{{ ansible_eda.event.body.requests_cpu }}"
-              "requests.memory": "{{ ansible_eda.event.body.requests_memory }}"
+              "limits.cpu": "{{ ansible_eda.event.body.namespace.limits_cpu }}"
+              "limits.memory": "{{ ansible_eda.event.body.namespace.limits_memory }}"
+              "requests.cpu": "{{ ansible_eda.event.body.namespace.requests_cpu }}"
+              "requests.memory": "{{ ansible_eda.event.body.namespace.requests_memory }}"
