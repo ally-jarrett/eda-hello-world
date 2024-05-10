@@ -1,0 +1,27 @@
+---
+- name: Hello Kafka Event
+  hosts: localhost
+  sources:
+    - ansible.eda.kafka:
+        host: automation-streams-kafka-bootstrap.skylight.svc.cluster.local
+        port: 9092
+        topic: kafka-test-topic
+        group_id: ansible-eda
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+  rules:
+    - name: kafka
+      condition: message is defined
+      action:
+        run_job_template:
+          name: EDA Hello World
+          organization: Default
+    - name: webhook
+      condition: event.body.message is defined
+      action:
+        run_job_template:
+          name: EDA Hello World
+          # var_root: payload
+          organization: Default
+
