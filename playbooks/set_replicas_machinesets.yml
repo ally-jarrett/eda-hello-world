@@ -1,0 +1,17 @@
+- name: Set MachineSet for a Kubernetes cluster
+  hosts: localhost
+  gather_facts: no
+  vars:
+    ms_name: 'cedar-s46rt-worker-0'
+    ms_replicas: '1'
+
+  tasks:
+    - name: Set resource quotas
+      kubernetes.core.k8s:
+        apiVersion: machine.openshift.io/v1beta1
+        kind: MachineSet
+        metadata:
+          name: "{{ ms_name }}"
+          namespace: openshift-machine-api
+        spec:
+          replicas: "{{ ms_replicas }}"

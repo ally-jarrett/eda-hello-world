@@ -1,0 +1,19 @@
+- name: Set resource quotas for a Kubernetes cluster for a namespace
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Set resource quotas
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: ResourceQuota
+        namespace: "{{ ansible_eda.event.body.namespace.name }}"
+        name: resource-quota
+        state: present
+        definition:
+          spec:
+            hard:
+              "limits.cpu": "{{ ansible_eda.event.body.limits_cpu }}"
+              "limits.memory": "{{ ansible_eda.event.body.limits_memory }}"
+              "requests.cpu": "{{ ansible_eda.event.body.requests_cpu }}"
+              "requests.memory": "{{ ansible_eda.event.body.requests_memory }}"

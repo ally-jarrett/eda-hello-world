@@ -1,0 +1,70 @@
+- name: Set resource quotas for a Kubernetes cluster for a namespace
+  hosts: localhost
+  gather_facts: no
+  vars:
+    ns: 'testing'
+    requests_cpu: '1'
+    limits_cpu: '1'
+    requests_memory: '1Gi'
+    limits_memory: '1Gi'
+
+  tasks:
+
+    - name: Create Namespace
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ ns }}"
+        state: present
+
+    - name: Set Initial Resource Quota
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: ResourceQuota
+        namespace: "{{ ns }}"
+        name: resource-quota
+        state: present
+        definition:
+          spec:
+            hard:
+              "limits.cpu": "{{ limits_cpu }}"
+              "limits.memory": "{{ limits_memory }}"
+              "requests.cpu": "{{ requests_cpu }}"
+              "requests.memory": "{{ requests_memory }}"
+
+    - name: Create a Deployment with 1 replica
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: "utilitypod"
+            namespace: "{{ ns }}"
+            labels:
+              app: quota-test
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                "app": "utilitypod"
+            template:
+              metadata:
+                labels:
+                  "app": "utilitypod"
+              spec: 
+                containers:
+                - name: "utilitypod"
+                  image: "busybox"
+                  resources: 
+                    requests:
+                      memory: "{{ requests_memory }}"
+                      cpu: "{{ requests_cpu }}"
+                    limits:
+                      memory: "{{ limits_memory }}"
+                      cpu: "{{ limits_cpu }}"
+                  command:
+                    - "sleep"
+                    - "3600"
+                    
+           

@@ -1,0 +1,66 @@
+- name: Create new Namespace for OCP cluster 
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Debug event
+      ansible.builtin.debug:
+        msg: 'Running Event Request: {{ ansible_eda.event.body.request.type }} with the payload request: {{ ansible_eda.event.body }}'
+    
+    - name: Create Namespace
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ ansible_eda.event.body.namespace.name }}"
+        state: present
+
+    - name: Set Initial Resource Quota
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: ResourceQuota
+        namespace: "{{ ansible_eda.event.body.namespace.name }}"
+        name: resource-quota
+        state: present
+        definition:
+          spec:
+            hard:
+              "limits.cpu": "{{ ansible_eda.event.body.namespace.limits_cpu }}"
+              "limits.memory": "{{ ansible_eda.event.body.namespace.limits_memory }}"
+              "requests.cpu": "{{ ansible_eda.event.body.namespace.requests_cpu }}"
+              "requests.memory": "{{ ansible_eda.event.body.namespace.requests_memory }}"
+
+    - name: Create a Deployment with 1 replica
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: "utilitypod"
+            namespace: "{{ ansible_eda.event.body.namespace.name  }}"
+            labels:
+              app: utilitypod
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                "app": "utilitypod"
+            template:
+              metadata:
+                labels:
+                  "app": "utilitypod"
+              spec: 
+                containers:
+                - name: "utilitypod"
+                  image: "busybox"
+                  resources: 
+                    requests:
+                      memory: "{{ ansible_eda.event.body.namespace.requests_memory }}"
+                      cpu: "{{ ansible_eda.event.body.namespace.requests_cpu }}"
+                    limits:
+                      memory: "{{ ansible_eda.event.body.namespace.limits_memory }}"
+                      cpu: "{{ ansible_eda.event.body.namespace.limits_cpu }}"
+                  command:
+                    - "sleep"
+                    - "3600"
+
