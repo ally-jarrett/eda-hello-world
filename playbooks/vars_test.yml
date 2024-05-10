@@ -13,6 +13,7 @@
 
     - name: Fail on no Namespace definition provided
       debug:
+        var: vars
 
     # Ensure we have the basic details 
     - name: Fail on no Namespace definition provided
